@@ -1,0 +1,33 @@
+yarn init -y
+yarn add apollo-server-express express reflect-metadata type-graphql 
+yarn add graphql@15.3.0
+yarn add -D @types/express @types/graphql @types/node nodemon ts-node typescript
+create tsconfig.json
+create src/index.ts
+
+#2
+yarn add pg typeorm bcryptjs
+yarn add -D @types/bcryptjs
+create ormconfig.json
+create entity/User.ts
+create modules/user/Register.ts
+
+#3
+yarn add ts-node-dev --dev
+update script in pakage.json
+ "scripts": {
+    "start": "ts-node-dec --respawn src/index.ts"
+  }
+to tsconfig.json
+  "allowSyntheticDefaultImports": true,
+  "esModuleInterop": true,
+yarn add class-validator
+create register/RegisterInput.ts
+
+
+
+
+\l (show dbs)
+\c (slect dbs)
+\dt (show tables) 
+
