@@ -10,9 +10,10 @@ import cors from "cors";
 import { RegisterResolver } from "./modules/user/Register";
 import { LoginResolver } from "./modules/user/Login";
 import { MeResolver } from "./modules/user/Me";
-
+import { AdminResolver } from "./modules/user/Admin";
 import { redis } from "./redis";
 
+const port = 4000;
 
 var RedisStore = connectRedis(session);
 declare module 'express-session' {
@@ -24,7 +25,10 @@ const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, LoginResolver, MeResolver]
+    resolvers: [RegisterResolver, LoginResolver, MeResolver, AdminResolver],
+    authChecker: ({context: {req}}) => {
+      return !!req.session.userId;
+    }
   });
 
   const apolloServer = new ApolloServer({
@@ -57,8 +61,8 @@ const main = async () => {
   await apolloServer.start();
   apolloServer.applyMiddleware({ app });
 
-  app.listen(4220, () => {
-    console.log("server started on http://localhost:4220/graphql");
+  app.listen(port, () => {
+    console.log(`server started on http://localhost:${port}/graphql`);
   });
 };
 
