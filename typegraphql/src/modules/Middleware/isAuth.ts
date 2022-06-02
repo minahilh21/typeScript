@@ -1,11 +1,20 @@
 import { MiddlewareFn } from "type-graphql";
 
 import { MyContext } from "../../types/MyContext";
+import { verify } from "jsonwebtoken";
+require('dotenv').config();
 
-export const isAuth: MiddlewareFn<MyContext> = async ({ context }, next) => {
-  if (!context.req.session!.userId) {
-   // throw new Error("not authenticated");
-   return next();
+export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
+  const authorization = context.req.headers["authorization"];
+  console.log("auth is: ", authorization);
+  if (!authorization) {
+    throw new Error("Not authenticated");
   }
-  return next();
+  if(verify(authorization, process.env.SECRET_KEY!)){
+    return next();
+  }
+  else {
+   throw new Error("Not authenticated");
+  }
 };
+

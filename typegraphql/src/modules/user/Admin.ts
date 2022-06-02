@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { User } from "../../entity/User";
 import { isAuth } from "../Middleware/isAuth";
 import { logger } from "../Middleware/logger";
+import jwt from "jsonwebtoken";
+require('dotenv').config();
 
 @Resolver()
 export class AdminResolver {
@@ -21,9 +23,6 @@ export class AdminResolver {
       email: email,
     })
     if(oneUser) {
-      oneUser.firstName = "aaa";
-      oneUser.save();
-      console.log(oneUser);
       return oneUser;
     }
     return null;
@@ -35,6 +34,7 @@ export class AdminResolver {
     @Arg("firstName" , { nullable: true }) firstName: string,
     @Arg("lastName", { nullable: true }) lastName: string,
     @Arg("password", { nullable: true }) password: string,
+    @Arg("role", { nullable: true }) role: string,
   ): Promise<User | undefined> {
     const oneUser = await User.findOneBy({
        email: email,
@@ -48,6 +48,9 @@ export class AdminResolver {
       }
       if(password) {
         oneUser.password = await bcrypt.hash(password, 12);
+      }
+      if(role) {
+        oneUser.role = role;
       }
       oneUser.save();
       return oneUser;
@@ -67,5 +70,27 @@ export class AdminResolver {
       return true;
     }
     return false;
+  }
+  @Query(() => String)
+  async getToken(
+    @Arg("email") email: string,
+    @Arg("password") password: string
+  ): Promise<string> {
+    const user = await User.findOne({ where: {email} });
+    if(!user) {
+    throw new Error("not authenticated");
+    }
+    if(user.role !== "admin") {
+      throw new Error("not authenticated");
+    }
+    const valid  = bcrypt.compare(password, user.password);
+    if(!valid) {
+      throw new Error("not authenticated");
+    }
+    return jwt.sign({
+      id: user.id,
+      email: email,
+      role: user.role
+    }, process.env.SECRET_KEY!,{ expiresIn: "1d"});
   }
 }

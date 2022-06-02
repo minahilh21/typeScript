@@ -1,21 +1,25 @@
- import "reflect-metadata";
+import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import Express from "express";
 import { buildSchema} from "type-graphql";
-import { createConnection } from "typeorm";
+import { createConnection} from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 
-import { RegisterResolver } from "./modules/user/Register";
 import { LoginResolver } from "./modules/user/Login";
-import { MeResolver } from "./modules/user/Me";
 import { AdminResolver } from "./modules/user/Admin";
+import { RegisterResolver } from "./modules/user/Register";
+require('dotenv').config();
+
+
+
 import { redis } from "./redis";
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 var RedisStore = connectRedis(session);
+export = session;
 declare module 'express-session' {
   interface SessionData {
       userId: any;
@@ -25,7 +29,7 @@ const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, LoginResolver, MeResolver, AdminResolver],
+    resolvers: [LoginResolver, AdminResolver, RegisterResolver],
     authChecker: ({context: {req}}) => {
       return !!req.session.userId;
     }
@@ -33,14 +37,10 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({req}: any) =>({req}),
+    context: ({req, res}: any) =>({req, res}),
   });
 
   const app = Express();
-  app.use(cors({
-    credentials: true,
-    // origin: "http://localhost:3000"
-  }));
   app.use(
     session({
       store: new RedisStore({
@@ -49,7 +49,7 @@ const main = async () => {
       name: "qid",
       secret: "aslkdfjoiq12312",
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -57,9 +57,13 @@ const main = async () => {
       }
     })
   );
+  app.use(cors({
+    credentials: true,
+    // origin: "http://localhost:4000",
+  }));
   app.set("Access-Control-Allow-Credentials", true);
   await apolloServer.start();
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: { origin: 'https://studio.apollographql.com', credentials: true } });
 
   app.listen(port, () => {
     console.log(`server started on http://localhost:${port}/graphql`);

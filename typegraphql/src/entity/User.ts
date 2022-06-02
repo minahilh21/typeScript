@@ -24,6 +24,9 @@ export class User extends BaseEntity {
   name(@Root() parent: User): string {
     return `${parent.firstName} ${parent.lastName}`;
   }
+  @Field()
+  @Column({default: "client"})
+  role: string;
 
   @Column()
   password: string;
