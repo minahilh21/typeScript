@@ -6,15 +6,16 @@ import { createConnection} from "typeorm";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
+require('dotenv').config();
+import { redis } from "./redis";
 
 import { LoginResolver } from "./modules/user/Login";
 import { AdminResolver } from "./modules/user/Admin";
 import { RegisterResolver } from "./modules/user/Register";
-require('dotenv').config();
-
-
-
-import { redis } from "./redis";
+import { ReadResolver } from "./modules/user/Read";
+import { UpdateResolver } from "./modules/user/Update";
+import { DeleteResolver } from "./modules/user/Delete";
+import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 
 const port = process.env.PORT || 4000;
 
@@ -29,7 +30,7 @@ const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [LoginResolver, AdminResolver, RegisterResolver],
+    resolvers: [LoginResolver, RegisterResolver, AdminResolver, ReadResolver, UpdateResolver, DeleteResolver, ConfirmUserResolver],
     authChecker: ({context: {req}}) => {
       return !!req.session.userId;
     }
