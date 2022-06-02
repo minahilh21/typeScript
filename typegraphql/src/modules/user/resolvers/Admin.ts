@@ -1,7 +1,7 @@
 import { Resolver, Query,Arg} from "type-graphql";
 import bcrypt from "bcryptjs";
 
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 // import { isAuth } from "../Middleware/isAuth";
 // import { logger } from "../Middleware/logger";
 import jwt from "jsonwebtoken";

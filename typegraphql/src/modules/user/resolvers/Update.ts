@@ -1,9 +1,9 @@
 import { Resolver, Mutation, Arg, UseMiddleware} from "type-graphql";
 import bcrypt from "bcryptjs";
 
-import { User } from "../../entity/User";
-import { isAuth } from "../Middleware/isAuth";
-import { logger } from "../Middleware/logger";
+import { User } from "../../../entity/User";
+import { isAuth } from "../../Middleware/isAuth";
+import { logger } from "../../Middleware/logger";
 
 @Resolver()
 export class UpdateResolver {

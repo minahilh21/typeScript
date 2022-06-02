@@ -9,13 +9,13 @@ import cors from "cors";
 require('dotenv').config();
 import { redis } from "./redis";
 
-import { LoginResolver } from "./modules/user/Login";
-import { AdminResolver } from "./modules/user/Admin";
-import { RegisterResolver } from "./modules/user/Register";
-import { ReadResolver } from "./modules/user/Read";
-import { UpdateResolver } from "./modules/user/Update";
-import { DeleteResolver } from "./modules/user/Delete";
-import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
+import { LoginResolver } from "./modules/user/resolvers/Login";
+import { AdminResolver } from "./modules/user/resolvers/Admin";
+import { RegisterResolver } from "./modules/user/resolvers/Register";
+import { ReadResolver } from "./modules/user/resolvers/Read";
+import { UpdateResolver } from "./modules/user/resolvers/Update";
+import { DeleteResolver } from "./modules/user/resolvers/Delete";
+import { ConfirmUserResolver } from "./modules/user/resolvers/ConfirmUser";
 
 const port = process.env.PORT || 4000;
 
