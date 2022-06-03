@@ -8,12 +8,12 @@ export class ConfirmUserResolver {
     @Arg("token") token: string,
   ): Promise<Boolean> {
     
-  const userId = await redis.get(token);
+  const userId = await redis.get('confirm_user'+token);
   if(!userId) {
     return false;
   }
   await User.update({id: parseInt(userId, 10)}, {confirmed: true});
-  await redis.del(token);
+  await redis.del('confirm_user'+ token);
   return true;
  }
 }

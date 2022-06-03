@@ -9,14 +9,6 @@ import cors from "cors";
 require('dotenv').config();
 import { redis } from "./redis";
 
-import { LoginResolver } from "./modules/user/resolvers/Login";
-import { AdminResolver } from "./modules/user/resolvers/Admin";
-import { RegisterResolver } from "./modules/user/resolvers/Register";
-import { ReadResolver } from "./modules/user/resolvers/Read";
-import { UpdateResolver } from "./modules/user/resolvers/Update";
-import { DeleteResolver } from "./modules/user/resolvers/Delete";
-import { ConfirmUserResolver } from "./modules/user/resolvers/ConfirmUser";
-
 const port = process.env.PORT || 4000;
 
 var RedisStore = connectRedis(session);
@@ -30,7 +22,7 @@ const main = async () => {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [LoginResolver, RegisterResolver, AdminResolver, ReadResolver, UpdateResolver, DeleteResolver, ConfirmUserResolver],
+    resolvers: [__dirname + "/modules/**/*.ts"],
     authChecker: ({context: {req}}) => {
       return !!req.session.userId;
     }
