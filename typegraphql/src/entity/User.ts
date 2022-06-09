@@ -1,5 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
-import { ObjectType, Field, ID, Root } from "type-graphql";
+// import { MyContext } from "src/types/MyContext";
+import { ObjectType, Field, ID, Root} from "type-graphql";
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  BaseEntity, 
+  OneToMany, 
+  // JoinTable 
+} from "typeorm";
+// import { Course } from "./Course";
+
+import { UserCourse } from "./UserCourse";
 
 @ObjectType()
 @Entity()
@@ -33,4 +44,7 @@ export class User extends BaseEntity {
 
   @Column("bool", {default:false})
   confirmed: Boolean;
+  
+  @OneToMany(() => UserCourse, user_course => user_course.user)
+  user_course: UserCourse[];
 }

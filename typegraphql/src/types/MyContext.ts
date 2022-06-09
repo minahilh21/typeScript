@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+// import { createCourseLoader } from "../modules/user/utils/courseLoader";
 
 export interface MyContext {
   req: Request;
   res: Response;
-  payload?: { role: string };
+  // courseLoader: ReturnType<typeof createCourseLoader>;
 }

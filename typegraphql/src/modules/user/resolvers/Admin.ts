@@ -5,24 +5,12 @@ import { User } from "../../../entity/User";
 // import { isAuth } from "../Middleware/isAuth";
 // import { logger } from "../Middleware/logger";
 import jwt from "jsonwebtoken";
+// import { Course } from "../../../entity/Course";
+
 require('dotenv').config();
 
 @Resolver()
 export class AdminResolver {
-  // @UseMiddleware(isAuth, logger)
-  // @Mutation(() => Boolean)
-  // async deleteUser(
-  //   @Arg("email") email: string,
-  // ): Promise<boolean> {
-  //   const oneUser = await User.findOneBy({
-  //     email: email,
-  //   })
-  //   if(oneUser) {
-  //     oneUser.remove();
-  //     return true;
-  //   }
-  //   return false;
-  // }
   @Query(() => String)
   async getToken(
     @Arg("email") email: string,

@@ -30,7 +30,10 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({req, res}: any) =>({req, res}),
+    context: ({req, res}: any) =>(
+      { req, 
+        res,
+      }),
   });
 
   const app = Express();

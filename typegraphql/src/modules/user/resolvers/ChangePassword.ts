@@ -18,13 +18,11 @@ export class ChangePasswordResolver {
     if (!userId) {
       return null;
     }
-
     const user = await User.findOneBy({id: parseInt(userId)});
 
     if (!user) {
       return null;
     }
-
     await redis.del('forgot_password' + token);
 
     user.password = await bcrypt.hash(password, 12);
